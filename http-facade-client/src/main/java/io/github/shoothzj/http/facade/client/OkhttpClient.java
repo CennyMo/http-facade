@@ -129,7 +129,7 @@ public class OkhttpClient extends BaseHttpClient {
     @Nullable
     private static RequestBody requestBody(@Nullable byte[] body) {
         if (body == null) {
-            return null;
+            return RequestBody.create(new byte[0]);
         }
         return RequestBody.create(body);
     }
