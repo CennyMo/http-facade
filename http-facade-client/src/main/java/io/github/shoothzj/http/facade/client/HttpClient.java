@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -28,6 +29,38 @@ public interface HttpClient extends Closeable {
      * @return The HTTP response.
      */
     HttpResponse sendSync(HttpRequest request);
+
+    default CompletableFuture<HttpResponse> post(String url, byte[] body) {
+        return post(url, body, new HashMap<>());
+    }
+
+    default CompletableFuture<HttpResponse> put(String url, byte[] body) {
+        return put(url, body, new HashMap<>());
+    }
+
+    default CompletableFuture<HttpResponse> delete(String url) {
+        return delete(url, new HashMap<>());
+    }
+
+    default CompletableFuture<HttpResponse> get(String url) {
+        return get(url, new HashMap<>());
+    }
+
+    default @NotNull HttpResponse postSync(String url, byte[] body) {
+        return postSync(url, body, new HashMap<>());
+    }
+
+    default @NotNull HttpResponse putSync(String url, byte[] body) {
+        return putSync(url, body, new HashMap<>());
+    }
+
+    default @NotNull HttpResponse deleteSync(String url) {
+        return deleteSync(url, new HashMap<>());
+    }
+
+    default @NotNull HttpResponse getSync(String url) {
+        return getSync(url, new HashMap<>());
+    }
 
     default CompletableFuture<HttpResponse> post(String url, byte[] body, Map<String, List<String>> headers) {
         return send(new HttpRequest(url, HttpMethod.POST, headers, body));
