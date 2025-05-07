@@ -48,6 +48,7 @@ public class VertxHttpClient extends BaseHttpClient {
                 .setPort(uri.getPort())
                 .setURI(uri.getPath() + (uri.getQuery() != null ? "?" + uri.getQuery() : ""));
 
+        String errorMsg = "Async request failed";
         vertxClient.request(options).compose(httpRequest -> {
             request.headers().forEach((key, values) -> values.forEach(value -> httpRequest.putHeader(key, value)));
 
@@ -68,7 +69,8 @@ public class VertxHttpClient extends BaseHttpClient {
                             ))
             );
             futureResponse.complete(httpResponse);
-        })).onFailure(futureResponse::completeExceptionally);
+        }).exceptionHandler(e -> futureResponse.completeExceptionally(new HttpClientException(errorMsg, e))))
+          .onFailure(e -> futureResponse.completeExceptionally(new HttpClientException(errorMsg, e)));
 
         return futureResponse;
     }
